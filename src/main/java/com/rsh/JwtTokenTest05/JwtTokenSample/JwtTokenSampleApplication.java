@@ -18,17 +18,18 @@ import com.rsh.JwtTokenTest05.JwtTokenSample.service.UserService;
 @SpringBootApplication
 public class JwtTokenSampleApplication {
 
-	
+	@Bean
+	public PasswordEncoder passwordEncoder()
+	{
+	    return new BCryptPasswordEncoder();
+	}
 
 	
 	public static void main(String[] args) {
 		SpringApplication.run(JwtTokenSampleApplication.class, args);
 	}
 	
-	@Bean
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+
 
 
 	@Bean
