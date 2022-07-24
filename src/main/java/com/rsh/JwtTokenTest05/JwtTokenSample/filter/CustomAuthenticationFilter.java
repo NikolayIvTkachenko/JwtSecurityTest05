@@ -20,10 +20,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
@@ -69,8 +71,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 				.withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 				.sign(algorithm);	
 		
-		//response.setHeader("access_token", access_token);
-		//response.setHeader("refresh_token", refresh_token);
+		response.setHeader("access_token", access_token);
+		response.setHeader("refresh_token", refresh_token);
 		
 		Map<String, String> tokensMap = new HashMap<>();
 		tokensMap.put("access_token", access_token);

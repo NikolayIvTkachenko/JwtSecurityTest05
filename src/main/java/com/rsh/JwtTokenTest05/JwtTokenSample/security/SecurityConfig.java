@@ -1,7 +1,5 @@
 package com.rsh.JwtTokenTest05.JwtTokenSample.security;
 
-import java.lang.invoke.VarHandle.AccessMode;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -27,11 +24,11 @@ import com.rsh.JwtTokenTest05.JwtTokenSample.filter.CustomAuthorizationFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	private UserDetailsService userDetailsService;
+	
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-		super();
+	public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) { //
 		this.userDetailsService = userDetailsService;
 		this.passwordEncoder = passwordEncoder;
 	}
@@ -44,7 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	}
 
 
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
@@ -52,12 +48,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		//http.authorizeHttpRequests().antMatchers("/api/login/**").permitAll();
 		http.authorizeHttpRequests().antMatchers("/api/login/**", "/api/token/refresh/**").permitAll();
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority("ROLE_USER");
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
 		//http.authorizeRequests().anyRequest().permitAll();
 		http.authorizeRequests().anyRequest().authenticated();
-		http.addFilter(customAuthenticationFilter);
+	    http.addFilter(customAuthenticationFilter);
 		http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
